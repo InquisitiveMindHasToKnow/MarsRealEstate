@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import org.ohmstheresistance.marsrealestate.R
+import org.ohmstheresistance.marsrealestate.databinding.FragmentDetailBinding
 
 class DetailFragment : Fragment() {
 
