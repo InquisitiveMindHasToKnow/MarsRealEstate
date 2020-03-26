@@ -9,18 +9,22 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.ohmstheresistance.marsrealestate.network.MarsApi
 import org.ohmstheresistance.marsrealestate.network.MarsProperty
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
+import java.lang.Exception
 
 class OverviewViewModel : ViewModel() {
 
-    private val _response = MutableLiveData<String>()
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    val response: LiveData<String>
-        get() = _response
+    private val _status = MutableLiveData<String>()
+    private val _property = MutableLiveData<MarsProperty>()
+
+    val status: LiveData<String>
+        get() = _status
+
+    val property: LiveData<MarsProperty>
+        get() = _property
 
     init {
         getMarsRealEstateProperties()
@@ -32,12 +36,16 @@ class OverviewViewModel : ViewModel() {
            var getDeferredProperties = MarsApi.retrofitService.getProperties()
 
             try {
-                var listOfResults = getDeferredProperties.await()
-                _response.value = "Success: ${listOfResults.size} Mars properties received!"
 
-            }catch (t:Throwable){
-                _response.value = "Failure: " + t.message
-            }
+                var listOfResults = getDeferredProperties.await()
+                _status.value = "Success: ${listOfResults.size} Mars properties received!"
+
+                if (listOfResults.size > 0) {
+                    _property.value = listOfResults[0]
+                }
+
+            }catch (e:Exception){
+                _status.value = "Failure: ${e.message}"             }
         }
     }
     override fun onCleared() {
