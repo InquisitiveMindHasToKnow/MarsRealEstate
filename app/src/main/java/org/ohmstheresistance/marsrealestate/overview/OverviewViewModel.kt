@@ -18,13 +18,13 @@ class OverviewViewModel : ViewModel() {
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     private val _status = MutableLiveData<String>()
-    private val _property = MutableLiveData<MarsProperty>()
+    private val _properties = MutableLiveData<List<MarsProperty>>()
 
     val status: LiveData<String>
         get() = _status
 
-    val property: LiveData<MarsProperty>
-        get() = _property
+    val properties: LiveData<List<MarsProperty>>
+        get() = _properties
 
     init {
         getMarsRealEstateProperties()
@@ -41,7 +41,7 @@ class OverviewViewModel : ViewModel() {
                 _status.value = "Success: ${listOfResults.size} Mars properties received!"
 
                 if (listOfResults.size > 0) {
-                    _property.value = listOfResults[0]
+                    _properties.value = listOfResults
                 }
 
             }catch (e:Exception){

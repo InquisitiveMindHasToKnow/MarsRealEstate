@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="org.ohmstheresistance.marsrealestate.overview.OverviewViewModel" />
+            name="property"
+            type="org.ohmstheresistance.marsrealestate.network.MarsProperty" />
     </data>
 
     <ImageView
@@ -14,7 +14,7 @@
         android:layout_height="170dp"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
+        app:imageUrl="@{property.img_srcUrl}"
         android:padding="2dp"
-        app:imageUrl="@{viewModel.property.img_srcUrl}"
         tools:src="@tools:sample/backgrounds/scenic"/>
 </layout>
