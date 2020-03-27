@@ -12,15 +12,17 @@ import org.ohmstheresistance.marsrealestate.network.MarsProperty
 
 import java.lang.Exception
 
+enum class MarsApiStatus { LOADING, ERROR, DONE }
+
 class OverviewViewModel : ViewModel() {
 
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    private val _status = MutableLiveData<String>()
+    private val _status = MutableLiveData<MarsApiStatus>()
     private val _properties = MutableLiveData<List<MarsProperty>>()
 
-    val status: LiveData<String>
+    val status: LiveData<MarsApiStatus>
         get() = _status
 
     val properties: LiveData<List<MarsProperty>>
@@ -36,16 +38,18 @@ class OverviewViewModel : ViewModel() {
            var getDeferredProperties = MarsApi.retrofitService.getProperties()
 
             try {
+                _status.value = MarsApiStatus.LOADING
 
                 var listOfResults = getDeferredProperties.await()
-                _status.value = "Success: ${listOfResults.size} Mars properties received!"
+                _status.value = MarsApiStatus.DONE
 
-                if (listOfResults.size > 0) {
-                    _properties.value = listOfResults
-                }
+                _properties.value = listOfResults
 
             }catch (e:Exception){
-                _status.value = "Failure: ${e.message}"             }
+
+                _status.value = MarsApiStatus.ERROR
+                _properties.value = ArrayList()
+            }
         }
     }
     override fun onCleared() {
