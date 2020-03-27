@@ -20,6 +20,10 @@
         android:name="org.ohmstheresistance.marsrealestate.detail.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail">
+
+        <argument
+            android:name="selectedProperty"
+            app:argType="org.ohmstheresistance.marsrealestate.network.MarsProperty"/>
     </fragment>
 
 </navigation>
