@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.ohmstheresistance.marsrealestate.databinding.MarsPropertiesItemviewBinding
 import org.ohmstheresistance.marsrealestate.network.MarsProperty
 
-class PhotoGridAdapter : ListAdapter<MarsProperty, PhotoGridAdapter.MarsPropertyViewHolder>(DiffCallback) {
+class PhotoGridAdapter (val onClickListener: OnClickListener) : ListAdapter<MarsProperty, PhotoGridAdapter.MarsPropertyViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarsPropertyViewHolder {
         return MarsPropertyViewHolder(MarsPropertiesItemviewBinding.inflate(LayoutInflater.from(parent.context)))
     }
@@ -16,6 +16,11 @@ class PhotoGridAdapter : ListAdapter<MarsProperty, PhotoGridAdapter.MarsProperty
     override fun onBindViewHolder(holder: PhotoGridAdapter.MarsPropertyViewHolder, position: Int) {
         val marsProperty = getItem(position)
         holder.bind(marsProperty)
+
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(marsProperty)
+        }
+
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<MarsProperty>() {
@@ -26,6 +31,10 @@ class PhotoGridAdapter : ListAdapter<MarsProperty, PhotoGridAdapter.MarsProperty
         override fun areContentsTheSame(oldItem: MarsProperty, newItem: MarsProperty): Boolean {
             return oldItem.id == newItem.id
         }
+    }
+
+    class OnClickListener(val clickListener: (marsProperty: MarsProperty) -> Unit) {
+        fun onClick(marsProperty:MarsProperty) = clickListener(marsProperty)
     }
 
     class MarsPropertyViewHolder(private var binding: MarsPropertiesItemviewBinding):
