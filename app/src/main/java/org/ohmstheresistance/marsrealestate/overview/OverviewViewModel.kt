@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.ohmstheresistance.marsrealestate.network.MarsApi
+import org.ohmstheresistance.marsrealestate.network.MarsApiFilter
 import org.ohmstheresistance.marsrealestate.network.MarsProperty
 
 import java.lang.Exception
@@ -33,13 +34,13 @@ class OverviewViewModel : ViewModel() {
         get() = _navigateToSelectedProperty
 
     init {
-        getMarsRealEstateProperties()
+        getMarsRealEstateProperties(MarsApiFilter.SHOW_ALL)
     }
 
-    private fun getMarsRealEstateProperties() {
+    private fun getMarsRealEstateProperties(filter: MarsApiFilter) {
 
         coroutineScope.launch {
-           var getDeferredProperties = MarsApi.retrofitService.getProperties()
+           var getDeferredProperties = MarsApi.retrofitService.getProperties(filter.value)
 
             try {
                 _status.value = MarsApiStatus.LOADING
@@ -62,6 +63,10 @@ class OverviewViewModel : ViewModel() {
 
     fun displayPropertyDetailsComplete() {
         _navigateToSelectedProperty.value = null
+    }
+
+    fun updateFilter(filter: MarsApiFilter) {
+        getMarsRealEstateProperties(filter)
     }
 
     override fun onCleared() {

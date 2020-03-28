@@ -1,15 +1,15 @@
 package org.ohmstheresistance.marsrealestate.overview
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import org.ohmstheresistance.marsrealestate.PhotoGridAdapter
+import org.ohmstheresistance.marsrealestate.R
 import org.ohmstheresistance.marsrealestate.databinding.FragmentOverviewBinding
+import org.ohmstheresistance.marsrealestate.network.MarsApiFilter
 
 class OverviewFragment : Fragment() {
 
@@ -35,7 +35,24 @@ class OverviewFragment : Fragment() {
             }
         })
 
+        setHasOptionsMenu(true)
+
         return binding.root
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.overflow_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        viewModel.updateFilter(
+            when (item.itemId) {
+                R.id.show_rent_menu -> MarsApiFilter.SHOW_RENT
+                R.id.show_buy_menu -> MarsApiFilter.SHOW_BUY
+                else -> MarsApiFilter.SHOW_ALL
+            }
+        )
+        return true
+    }
 }
